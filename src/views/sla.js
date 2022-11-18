@@ -1,17 +1,27 @@
-import { Button, Text, View } from "react-native";
+import { Button, Text, View, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import api from "../utils/api";
+import {
+    LineChart,
+    BarChart,
+    PieChart,
+    ProgressChart,
+    ContributionGraph,
+    StackedBarChart
+  } from "react-native-chart-kit";
+
 
 const HomeScreen = ({ navigation }) => {
 
-    const [teste, setTeste] = useState([]);
+    const [data, setData] = useState([0]);
 
     useEffect(() => {
         console.log('aa');
         api.get(`/main/`)
         .then((response) => {
-            console.log(response);
-            setTeste(response.data);
+            //setData(response.data.amountPerWeekDay);
+            //console.log(response.data.amountPerWeekDay);
+            setData(response.data.amountPerWeekDay);
         })
         .catch((err) => {
             console.log(err);
@@ -21,21 +31,49 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View>
-        <Button
+        {/* <Button
             title="Teste"
             onPress={() => navigation.navigate("Profile", { name: "Teste" })}
-        />
+        /> */}
 
         <View>
-            <Text>
-                { teste.length > 0 && (
-                    teste.map((item) => {
-                        return <Button title={item.date}>  </Button>
-                    })
-                )}
-
-                <Text> { JSON.stringify(teste) } </Text>
-            </Text>
+            <Text>Gráfico Ocorrências por dia da semana</Text>
+            <BarChart
+                data={{
+                labels: ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
+                datasets: [
+                    {
+                    data: data
+                    }
+                ]
+                }}
+                width={Dimensions.get("window").width} // from react-native
+                height={220}
+                //yAxisLabel="$"
+                //yAxisSuffix="k"
+                yAxisInterval={1} // optional, defaults to 1
+                chartConfig={{
+                backgroundColor: "#e26a00",
+                backgroundGradientFrom: "#fb8c00",
+                backgroundGradientTo: "#ffa726",
+                decimalPlaces: 2, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                    borderRadius: 16
+                },
+                propsForDots: {
+                    r: "6",
+                    strokeWidth: "2",
+                    stroke: "#ffa726"
+                }
+                }}
+                bezier
+                style={{
+                marginVertical: 8,
+                borderRadius: 16
+                }}
+            />
         </View>
 
     </View>
