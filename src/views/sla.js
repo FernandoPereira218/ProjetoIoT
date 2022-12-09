@@ -14,6 +14,7 @@ import {
 const HomeScreen = ({ navigation }) => {
 
     const [data, setData] = useState([0]);
+    const [contributionData, setContributionData] = useState([]);
 
     useEffect(() => {
         console.log('aa');
@@ -22,6 +23,7 @@ const HomeScreen = ({ navigation }) => {
             //setData(response.data.amountPerWeekDay);
             //console.log(response.data.amountPerWeekDay);
             setData(response.data.amountPerWeekDay);
+            setContributionData(response.data.listDates);
         })
         .catch((err) => {
             console.log(err);
@@ -72,6 +74,40 @@ const HomeScreen = ({ navigation }) => {
                 style={{
                 marginVertical: 8,
                 borderRadius: 16
+                }}
+            />
+        </View>
+
+        <View>
+            <Text>Gráfico de ocorências</Text>
+            <ContributionGraph
+                // data={{
+                // datasets: [
+                //     {
+                //     data: data
+                //     }
+                // ]
+                // }}
+                values={contributionData}
+                endDate={new Date("2022-12-10")}
+                numDays={105}
+                width={Dimensions.get("window").width}
+                height={220}
+                chartConfig={{
+                backgroundColor: "#e26a00",
+                backgroundGradientFrom: "#fb8c00",
+                backgroundGradientTo: "#ffa726",
+                decimalPlaces: 2, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                    borderRadius: 16
+                },
+                propsForDots: {
+                    r: "6",
+                    strokeWidth: "2",
+                    stroke: "#ffa726"
+                }
                 }}
             />
         </View>
